@@ -248,6 +248,7 @@ module.exports = {
     ],
     "arrow-spacing": "error",
     "no-var": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-use-before-define": ["error"]
   }
