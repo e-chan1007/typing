@@ -52,7 +52,7 @@ module.exports = {
     "no-multi-spaces": "error",
     "no-labels": "warn",
     "no-lone-blocks": "error",
-    "no-loop-func": "error",
+    "no-loop-func": "off",
     "no-multi-str": "error",
     "no-new": "off",
     "no-new-func": "error",

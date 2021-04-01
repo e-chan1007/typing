@@ -1,0 +1,44 @@
+.text {
+  &__confirmed {
+    color: lightgray;
+  }
+
+  &__suggested {
+    color: lightgray;
+  }
+
+  &__missed {
+    color: red;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  .question {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    ruby-align: center;
+
+    .ruby {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+
+  .answer {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
