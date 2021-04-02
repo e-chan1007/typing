@@ -61,23 +61,47 @@ class App extends React.Component<IAppProps, IAppState> {
     let missTyped = false;
     const matchedRows = romanjiHiraganaTSV.filter((tsvRow: string[]) => {
       if (!tsvRow[0].startsWith(preConfirmedRomanji)) return false;
-      for (let i = 1; i < String(this.state.question).length - confirmedAnswer.length; i++) {
+      for (let i = 1; i <= String(this.state.question).length - confirmedAnswer.length; i++) {
         if (!tsvRow[1].startsWith(String(this.state.question).substr(confirmedAnswer.length, i))) { return false; }
-        if (tsvRow[1].length === i) break;
+        console.log("ans", String(this.state.question).substr(confirmedAnswer.length, i));
+        if (tsvRow[1].length === i) return true;
       }
-      return true;
+      console.log("finally");
+      if (String(this.state.question).length - confirmedAnswer.length === 1) {
+        return true;
+      }
+      return false;
     });
     if (matchedRows.length > 0) {
-      const matchedRow = matchedRows.find((tsvRow: string[]) => (tsvRow[0] === preConfirmedRomanji));
+      console.log(String(this.state.question).substr(String(this.state.confirmedAnswer).length, 1));
+      const matchedRow = matchedRows.find((tsvRow: string[]) => (
+        tsvRow[0] === preConfirmedRomanji
+      ));
       if (!(preConfirmedRomanji === "n" && /^(ん[なにぬねのや]?)$/.test(String(this.state.question).substr(String(this.state.confirmedAnswer).length, 2))) && matchedRow) {
         if (matchedRow[2]) {
+          console.log(3);
+          console.log(matchedRow);
           confirmedRomanji += preConfirmedRomanji.slice(0, -matchedRow[2].length);
           confirmedAnswer += matchedRow[1];
           preConfirmedRomanji = matchedRow[2];
         } else {
+          console.log(4);
           confirmedRomanji += preConfirmedRomanji;
           confirmedAnswer += matchedRow[1];
           preConfirmedRomanji = "";
+        }
+      } else {
+        if (String(this.state.question).substr(confirmedAnswer.length, 1) === "っ"
+        && /^[qvlxkgszjtdhfbpmyrwc]$/.test(preConfirmedRomanji)
+        && !romanjiHiraganaTSV.some((tsvRow: string[]) => {
+          if (!tsvRow[0].startsWith(preConfirmedRomanji)) return false;
+          console.log(String(this.state.question).substr(confirmedAnswer.length + 1, 1));
+          if (tsvRow[1] !== String(this.state.question).substr(confirmedAnswer.length + 1, 1)) return false;
+          return true;
+        })) {
+          preConfirmedRomanji = preConfirmedRomanji.slice(0, -1);
+          inputtedRomanji = inputtedRomanji.slice(0, -1);
+          missTyped = true;
         }
       }
     } else {
@@ -95,6 +119,7 @@ class App extends React.Component<IAppProps, IAppState> {
       }
     }
     if (this.state.question === confirmedAnswer) {
+      console.log(9);
       this.generateQuestion();
       confirmedRomanji = "";
       confirmedAnswer = "";
@@ -108,6 +133,8 @@ class App extends React.Component<IAppProps, IAppState> {
     let _remainKana = String(this.state.question).slice(String(this.state.confirmedAnswer).length).replace(/(ん[なにぬねのや])/g, "ん$1").replace(/ん$/, "んん");
     let _i = _remainKana.length;
     const failedTSVRows: string[][] = [];
+    console.log("---");
+    let _sokuonSkipFlag = false;
     while (_remainKana.length > 0) {
       const _target = _remainKana.substr(0, _i);
 
@@ -128,10 +155,13 @@ class App extends React.Component<IAppProps, IAppState> {
         if (_matchedRow[0] === "n") {
           suggestedRomanji += "n";
         } else if (_matchedRow[1] === "っ" && _matchedRow[2]) {
-          if (!(suggestedRomanji.length === 1
-            && String(this.state.inputtedRomanji).endsWith(_matchedRow[2]))) {
-            suggestedRomanji += _matchedRow[2];
+          console.log({ _sokuonSkipFlag });
+          if (suggestedRomanji.length === 0
+             && String(this.state.preConfirmedRomanji).length === 1 && !_sokuonSkipFlag) {
+            _sokuonSkipFlag = true;
+            continue;
           }
+          suggestedRomanji += _matchedRow[2];
         } else if (String(this.state.preConfirmedRomanji).length > 0 && suggestedRomanji.length === 0) {
           suggestedRomanji += _matchedRow[0].slice(String(this.state.preConfirmedRomanji).length);
         } else {
@@ -151,6 +181,7 @@ class App extends React.Component<IAppProps, IAppState> {
     if (String(this.state.preConfirmedRomanji).endsWith("n") && suggestedRomanji.startsWith("nn")) {
       suggestedRomanji = suggestedRomanji.slice(1);
     }
+    if (_sokuonSkipFlag) suggestedRomanji = suggestedRomanji.slice(1);
 
     return (
       <div className="container">
