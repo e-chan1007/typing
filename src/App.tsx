@@ -36,15 +36,15 @@ class App extends React.Component<IAppProps, IAppState> {
   }
   generateQuestion(): void {
     const questions = [
+      ["坊主が屏風に上手に坊主の絵を描いた", "ぼうずがびょうぶにじょうずにぼうずのえをかいた"],
       ["東京特許許可局許可局長の許可 今日急遽却下", "とうきょうとっきょきょかきょくきょかきょくちょうのきょか きょうきゅうきょきゃっか"],
       ["肩硬かったから買った肩たたき器", "かたかたかったからかったかたたたきき"],
-      ["かえるピョコピョコ三ピョコピョコ 合わせてピョコピョコ六ピョコピョコ", "かえるぴょこぴょこみぴょこぴょこ あわせてぴょこぴょこむぴょこぴょこ"],
-      ["坊主が屏風に上手に坊主の絵を描いた", "ぼうずがびょうぶにじょうずにぼうずのえをかいた"],
+      ["ニュースです!人参のぬか漬けがネットで大人気です!なんでだろう?", "にゅーすです!にんじんのぬかづけがねっとでだいにんきです!なんでだろう?"],
       ["She sells sea shells by the seashore.", "She sells sea shells by the seashore."],
       ["The shells she sells are surely seashells.", "The shells she sells are surely seashells."],
       ["So if she sells shells on the seashore,", "So if she sells shells on the seashore,"],
       ["I'm sure she sells seashore shells.", "I'm sure she sells seashore shells."]
-    ] as string[][];
+    ];
     console.log(this.state.questionIndex);
     this.setState({
       questionLabel: questions[Number(this.state.questionIndex)][0],
